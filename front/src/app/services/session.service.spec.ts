@@ -27,6 +27,7 @@ describe('SessionService', () => {
   });
 
   it('should log in and set isLogged to true', () => {
+    // GIVEN
     const user: SessionInformation = {
       token: 'test',
       type: 'teacher',
@@ -38,8 +39,11 @@ describe('SessionService', () => {
     };
 
     const spy = jest.spyOn(isLoggedSubject, 'next');
+
+    // WHEN
     service.logIn(user);
 
+    // THEN
     isLoggedSubject.subscribe((isLogged) => {
       expect(isLogged).toBe(true);
       expect(spy).toBeCalledWith(true);
@@ -48,8 +52,13 @@ describe('SessionService', () => {
   });
 
   it('should log out and set isLogged to false', () => {
+    // GIVEN
     const spy = jest.spyOn(isLoggedSubject, 'next');
+
+    // WHEN
     service.logOut();
+
+    // THEN
     isLoggedSubject.subscribe((isLogged) => {
       expect(isLogged).toBe(false);
       expect(spy).toBeCalledWith(false);

@@ -98,6 +98,8 @@ describe('RegisterComponent', () => {
     });
 
     const submitButton = screen.queryByText('Submit') as HTMLButtonElement;
+
+    // WHEN
     await waitFor(() => {
       fireEvent.click(submitButton);
     });

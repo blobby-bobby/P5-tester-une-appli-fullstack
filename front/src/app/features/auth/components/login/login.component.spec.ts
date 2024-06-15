@@ -89,12 +89,17 @@ describe('LoginComponent', () => {
   });
 
   it('should submit form and login', () => {
+    // GIVEN
     component.form.setValue({ email: 'test-email', password: 'test-password' });
+
+    // WHEN
     component.submit();
     expect(authServiceMock.login).toHaveBeenCalledWith({
       email: 'test-email',
       password: 'test-password',
     });
+
+    // THEN
     expect(sessionServiceMock.logIn).toHaveBeenCalledWith(loginResponse);
     expect(routerMock.navigate).toHaveBeenCalledWith(['/sessions']);
     expect(component.onError).toEqual(false);

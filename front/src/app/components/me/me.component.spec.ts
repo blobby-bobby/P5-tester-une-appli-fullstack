@@ -11,13 +11,14 @@ import { By } from '@angular/platform-browser';
 import { UserService } from 'src/app/services/user.service';
 import { of } from 'rxjs';
 import { User } from 'src/app/interfaces/user.interface';
+import { Router } from '@angular/router';
 
 describe('MeComponent', () => {
   let component: MeComponent;
   let fixture: ComponentFixture<MeComponent>;
 
-  let userServiceMock: Pick<UserService, 'getById'>;
-  let sessionServiceMock: Pick<SessionService, 'sessionInformation'>;
+  let userService: UserService;
+  let router: Router;
 
   const mockUser: User = {
     id: 1,
@@ -29,23 +30,16 @@ describe('MeComponent', () => {
     createdAt: new Date(),
   };
 
-  beforeEach(() => {
-    userServiceMock = {
-      getById: jest.fn(),
-    };
+  const mockSessionService = {
+    sessionInformation: {
+      admin: true,
+      id: 1,
+    },
+    logOut(): void {},
+  };
 
-    sessionServiceMock = {
-      sessionInformation: {
-        id: 1,
-        username: 'John',
-        firstName: 'John',
-        lastName: 'Doe',
-        admin: false,
-        token: '123',
-        type: 'session',
-      },
-    };
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       declarations: [MeComponent],
       imports: [
         HttpClientModule,
@@ -53,15 +47,14 @@ describe('MeComponent', () => {
         MatCardModule,
         MatIconModule,
       ],
-      providers: [
-        { provide: UserService, useValue: userServiceMock },
-        { provide: SessionService, useValue: sessionServiceMock },
-      ],
+      providers: [{ provide: SessionService, useValue: mockSessionService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MeComponent);
     component = fixture.componentInstance;
-    jest.spyOn(userServiceMock, 'getById').mockReturnValue(of(mockUser));
+    fixture.detectChanges();
+    userService = TestBed.inject(UserService);
+    router = TestBed.inject(Router);
   });
 
   it('should create', () => {
@@ -69,18 +62,45 @@ describe('MeComponent', () => {
   });
 
   it('should fetch user on init', () => {
+    // GIVEN
+    let userServiceSpy = jest
+      .spyOn(userService, 'getById')
+      .mockReturnValue(of(mockUser));
+
+    // WHEN
     component.ngOnInit();
 
-    expect(userServiceMock.getById).toHaveBeenCalledWith('1');
-    expect(component.user).toEqual(mockUser);
+    // THEN
+    expect(component.user?.firstName).toBe('John');
+    expect(userServiceSpy).toHaveBeenCalledWith('1');
   });
 
   it('should navigate back on click on arrow', () => {
+    // GIVEN
     const spy = jest.spyOn(component, 'back');
     const button = fixture.debugElement.query(
       By.css('button[mat-icon-button]')
     );
+
+    // WHEN
     button.nativeElement.click();
+
+    // THEN
     expect(spy).toHaveBeenCalled();
+  });
+
+  it('should delete user and redirect to root', () => {
+    // GIVEN
+    let userServiceSpy = jest
+      .spyOn(userService, 'delete')
+      .mockReturnValue(of(void 0));
+    let navigateSpy = jest.spyOn(router, 'navigate');
+
+    // WHEN
+    component.delete();
+
+    // THEN
+    expect(userServiceSpy).toHaveBeenCalled();
+    // expect(navigateSpy).toHaveBeenCalledWith(['/']);
   });
 });

@@ -1,33 +1,50 @@
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {  ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  BrowserAnimationsModule,
+  NoopAnimationsModule,
+} from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { expect } from '@jest/globals';
 import { SessionService } from 'src/app/services/session.service';
 import { SessionApiService } from '../../services/session-api.service';
 
 import { FormComponent } from './form.component';
+import { Router } from '@angular/router';
+import { Session } from '../../interfaces/session.interface';
+import { By } from '@angular/platform-browser';
+import { of } from 'rxjs';
 
 describe('FormComponent', () => {
   let component: FormComponent;
   let fixture: ComponentFixture<FormComponent>;
 
+  let router: Router;
+  let sessionApiService: SessionApiService;
+
   const mockSessionService = {
     sessionInformation: {
-      admin: true
-    }
-  } 
+      admin: true,
+    },
+  };
+
+  const mockSession: Session = {
+    name: 'Gym Session',
+    description: 'Gym Description',
+    date: new Date(),
+    teacher_id: 1,
+    users: [],
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-
       imports: [
         RouterTestingModule,
         HttpClientModule,
@@ -35,25 +52,81 @@ describe('FormComponent', () => {
         MatIconModule,
         MatFormFieldModule,
         MatInputModule,
-        ReactiveFormsModule, 
+        ReactiveFormsModule,
         MatSnackBarModule,
         MatSelectModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        NoopAnimationsModule,
       ],
       providers: [
         { provide: SessionService, useValue: mockSessionService },
-        SessionApiService
+        SessionApiService,
       ],
-      declarations: [FormComponent]
-    })
-      .compileComponents();
+      declarations: [FormComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    router = TestBed.inject(Router);
+    sessionApiService = TestBed.inject(SessionApiService);
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it("should redirect user to '/sessions' if user is not admin", () => {
+    // GIVEN
+    let navigateSpy = jest.spyOn(router, 'navigate');
+    mockSessionService.sessionInformation.admin = false;
+
+    // WHEN
+    component.ngOnInit();
+
+    // THEN
+    expect(navigateSpy).toHaveBeenCalledWith(['/sessions']);
+  });
+
+  it("should not redirect user if user's role is admin", () => {
+    // GIVEN
+    let navigateSpy = jest.spyOn(router, 'navigate');
+    mockSessionService.sessionInformation.admin = true;
+
+    // WHEN
+    component.ngOnInit();
+
+    // THEN
+    expect(navigateSpy).not.toHaveBeenCalledWith(['/sessions']);
+  });
+
+  it("should redirect user to '/sessions/update/id of the session' if user is admin", () => {
+    // GIVEN
+    // WHEN
+    // THEN
+  });
+
+  it('create should submit form successfully', () => {
+    //Given
+    let sessionApiServiceSpy = jest
+      .spyOn(sessionApiService, 'create')
+      .mockReturnValue(of(mockSession));
+
+    //When
+    component.submit();
+
+    //Then
+    expect(sessionApiServiceSpy).toHaveBeenCalled();
+  });
+
+  it('should navigate back on click on arrow', () => {
+    // GIVEN
+    const navigateSpy = jest.spyOn(router, 'navigate');
+
+    // WHEN
+    component['exitPage']('redirect to sessions');
+
+    // THEN
+    expect(navigateSpy).toHaveBeenCalledWith(['sessions']);
   });
 });

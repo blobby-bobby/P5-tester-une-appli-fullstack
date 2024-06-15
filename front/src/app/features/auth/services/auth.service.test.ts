@@ -53,22 +53,30 @@ describe('AuthService', () => {
   });
 
   it('should register', () => {
+    // GIVEN
     service.register(mockRegisterRequest).subscribe((response) => {
       expect(response).toBeUndefined();
     });
 
+    // WHEN
     const req = httpMock.expectOne('api/auth/register');
+
+    // THEN
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(mockRegisterRequest);
     req.flush(null);
   });
 
   it('should login', () => {
+    //GIVEN
     service.login(mockLoginRequest).subscribe((response) => {
       expect(response).toEqual(mockSessionInformation);
     });
 
+    //WHEN
     const req = httpMock.expectOne('api/auth/login');
+
+    //THEN
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(mockLoginRequest);
     req.flush(mockSessionInformation);

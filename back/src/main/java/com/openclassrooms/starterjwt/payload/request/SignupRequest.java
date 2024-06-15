@@ -2,9 +2,11 @@ package com.openclassrooms.starterjwt.payload.request;
 
 import javax.validation.constraints.*;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class SignupRequest {
   @NotBlank
   @Size(max = 50)
