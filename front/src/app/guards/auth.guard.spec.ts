@@ -3,12 +3,15 @@ import { SessionService } from '../services/session.service';
 import { AuthGuard } from './auth.guard';
 import { Router } from '@angular/router';
 import { expect } from '@jest/globals';
+import { RouterTestingModule } from '@angular/router/testing';
+import { routes } from '../app-routing.module';
 
 describe('AuthGuard', () => {
   let guard: AuthGuard;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [RouterTestingModule.withRoutes(routes)],
       providers: [
         AuthGuard,
         { provide: SessionService, useValue: {} },

@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 import { routes } from 'src/app/app-routing.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { SessionsModule } from '../../sessions.module';
 
 describe('DetailComponent', () => {
   let component: DetailComponent;
@@ -136,11 +137,5 @@ describe('DetailComponent', () => {
 
     //THEN
     expect(sessionApiServiceSpy).toHaveBeenCalledWith('2', '3');
-  });
-
-  it('should fetch session', () => {
-    //GIVEN
-    //WHEN
-    //THEN
   });
 });
