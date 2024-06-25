@@ -1,30 +1,53 @@
 describe('Login spec', () => {
-  it('Login successfull', () => {
+  beforeEach(() => {
     cy.visit('/login');
+  });
 
+  it('should login successfully, with correct credentials', () => {
     cy.intercept('POST', '/api/auth/login', {
       body: {
         id: 1,
-        username: 'userName',
-        firstName: 'firstName',
-        lastName: 'lastName',
+        username: 'JohnnyBravo',
+        firstName: 'Johnny',
+        lastName: 'Bravo',
         admin: true,
       },
     });
 
-    cy.intercept(
-      {
-        method: 'GET',
-        url: '/api/session',
-      },
-      []
-    ).as('session');
+    cy.login('yoga@studio.com', 'test!1234');
 
-    cy.get('input[formControlName=email]').type('yoga@studio.com');
-    cy.get('input[formControlName=password]').type(
-      `${'test!1234'}{enter}{enter}`
-    );
-
+    cy.get('.error').should('not.exist');
     cy.url().should('include', '/sessions');
+  });
+
+  it('should not login, with incorrect password', () => {
+    cy.intercept('POST', '/api/auth/login', { statusCode: 400 });
+
+    cy.login('yoga@studio.com', 'test!1234');
+
+    cy.url().should('include', '/login');
+    cy.get('.error').should('be.visible');
+  });
+
+  it('should not login, with incorrect email', () => {
+    cy.intercept('POST', '/api/auth/login', { statusCode: 400 });
+
+    cy.login('yoga@studio.com', 'test!1234');
+
+    cy.url().should('include', '/login');
+    cy.get('.error').should('be.visible');
+  });
+
+  it('should have disabled submit button while all fields are invalid', () => {
+    cy.get('button[type=submit]').should('be.disabled');
+
+    cy.get('input[formControlName=email]').type('yoga@');
+    cy.get('button[type=submit]').should('be.disabled');
+
+    cy.get('input[formControlName=email]').clear();
+    cy.get('button[type=submit]').should('be.disabled');
+
+    cy.get('input[formControlName=password]').type('test');
+    cy.get('button[type=submit]').should('be.disabled');
   });
 });

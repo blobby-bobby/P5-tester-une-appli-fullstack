@@ -7,13 +7,19 @@
         mat-raised-button
         color="primary"
         routerLink="create"
+        data-testid="create-button"
       >
         <mat-icon>add</mat-icon>
         <span class="ml1">Create</span>
       </button>
     </mat-card-header>
     <div class="items mt2" fxLayout="row wrap" fxLayout.lt-md="column">
-      <mat-card class="item" *ngFor="let session of sessions$ | async" fxFlex>
+      <mat-card
+        class="item"
+        *ngFor="let session of sessions$ | async"
+        fxFlex
+        data-testid="session-card"
+      >
         <mat-card-header>
           <mat-card-title>{{ session.name }}</mat-card-title>
           <mat-card-subtitle>
@@ -33,6 +39,7 @@
             mat-raised-button
             color="primary"
             [routerLink]="['detail', session.id]"
+            data-testid="detail-button"
           >
             <mat-icon>search</mat-icon>
             <span class="ml1">Detail</span>
@@ -42,6 +49,7 @@
             mat-raised-button
             color="primary"
             [routerLink]="['update', session.id]"
+            data-testid="edit-button"
           >
             <mat-icon>edit</mat-icon>
             <span class="ml1">Edit</span>

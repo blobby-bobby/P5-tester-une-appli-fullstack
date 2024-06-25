@@ -41,3 +41,24 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+declare namespace Cypress {
+  interface Chainable {
+    login(email: string, password: string): void;
+  }
+}
+
+Cypress.Commands.add('login', (email, password) => {
+  cy.visit('/login');
+  cy.intercept(
+    {
+      method: 'GET',
+      url: '/api/session',
+    },
+    []
+  ).as('session');
+  cy.get('input[formControlName=email]').should('exist');
+  cy.get('input[formControlName=password]').should('exist');
+  cy.get('input[formControlName=email]').type(email);
+  cy.get('input[formControlName=password]').type(`${password}{enter}{enter}`);
+});

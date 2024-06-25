@@ -31,8 +31,6 @@ class AuthControllerIT {
     @Autowired
     UserRepository userRepository;
 
-    // mappe les requêtes MVC de JSON en string
-    // NEEDED pour tous les tests avec requêtes POST
     @Autowired
     ObjectMapper mapper;
 

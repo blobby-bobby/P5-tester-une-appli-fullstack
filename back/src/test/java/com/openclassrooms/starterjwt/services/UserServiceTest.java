@@ -1,10 +1,8 @@
-package com.openclassrooms.services;
+package com.openclassrooms.starterjwt.services;
 
 import com.openclassrooms.starterjwt.SpringBootSecurityJwtApplicationTests;
 import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.repository.UserRepository;
-import com.openclassrooms.starterjwt.services.UserService;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
