@@ -1,14 +1,6 @@
 describe('Me spec', () => {
   beforeEach(() => {
-    cy.intercept('POST', '/api/auth/login', {
-      body: {
-        id: 1,
-        username: 'JohnnyBravo',
-        firstName: 'Johnny',
-        lastName: 'Bravo',
-        admin: true,
-      },
-    });
+    cy.interceptIsAdmin(true);
 
     cy.intercept(
       {
@@ -37,6 +29,7 @@ describe('Me spec', () => {
   });
 
   it('should show user information, as non admin', () => {
+    // THEN
     cy.get('.mat-card-title').should('contain', 'User information');
     cy.get('[data-testid="user-name"]').should('contain', 'Johnny BRAVO');
     cy.get('[data-testid="user-email"]').should('contain', 'yoga@studio.com');
@@ -45,11 +38,14 @@ describe('Me spec', () => {
   });
 
   it('should delete user account on click on delete', () => {
+    // GIVEN
     cy.intercept('DELETE', '/api/user/1', { statusCode: 200 });
 
+    // WHEN
     cy.get('[data-testid="delete-account-button"]').should('exist');
     cy.get('[data-testid="delete-account-button"]').click();
 
+    // THEN
     cy.url().should('not.contain', 'me');
   });
 });

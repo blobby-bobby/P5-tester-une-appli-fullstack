@@ -1,68 +1,28 @@
 describe('Session delete spec', () => {
-  it('should delete session successfully', () => {
+  it('admin should be able to delete a session', () => {
     // GIVEN
-    cy.intercept('POST', '/api/auth/login', {
-      body: {
-        id: 1,
-        username: 'JohnnyBravo',
-        firstName: 'Johnny',
-        lastName: 'Bravo',
-        admin: true,
-      },
-    });
+    cy.interceptIsAdmin(true);
+    cy.interceptSessions();
+    cy.interceptSessionDetail();
+    cy.interceptTeachers();
 
     cy.intercept(
       {
-        method: 'GET',
-        url: '/api/session',
-      },
-      [
-        {
-          id: 1,
-          name: 'Super Cool Session',
-          date: '2024-05-29T00:00:00.000+00:00',
-          teacher_id: 1,
-          description: 'It is a Super Cool Session',
-          users: [],
-          createdAt: '2024-05-2917:03:24',
-          updatedAt: '2024-05-2917:03:24',
-        },
-      ]
-    ).as('session');
-
-    cy.intercept(
-      {
-        method: 'GET',
+        method: 'DELETE',
         url: '/api/session/1',
       },
       {
-        id: 1,
-        name: 'Super Cool Session',
-        date: '2024-05-29T00:00:00.000+00:00',
-        teacher_id: 1,
-        description: 'It is a Super Cool Session',
-        users: [1],
-        createdAt: '2024-05-29T17:03:24',
-        updatedAt: '2024-05-29T17:03:24',
+        statusCode: 200,
       }
-    ).as('session-detail');
-
-    cy.intercept(
-      {
-        method: 'GET',
-        url: '/api/teacher',
-      },
-      [
-        {
-          id: 1,
-          lastName: 'DELAHAYE',
-          firstName: 'Margot',
-          createdAt: '2024-05-29T17:03:24',
-          updatedAt: '2024-05-29T17:03:24',
-        },
-      ]
     ).as('teacher');
 
     cy.login('yoga@studio.com', 'test!1234');
+
+    // WHEN
+    cy.get('[data-testid="detail-button"]').first().click();
+    cy.get('[data-testid="delete-button"]').should('contain', 'Delete').click();
+
+    // THEN
+    cy.url().should('include', '/sessions');
   });
 });

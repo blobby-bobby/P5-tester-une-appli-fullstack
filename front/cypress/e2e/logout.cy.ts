@@ -1,15 +1,7 @@
 describe('Logout spec', () => {
   it('should logout successfully', () => {
     // GIVEN
-    cy.intercept('POST', '/api/auth/login', {
-      body: {
-        id: 1,
-        username: 'JohnnyBravo',
-        firstName: 'Johnny',
-        lastName: 'Bravo',
-        admin: true,
-      },
-    });
+    cy.interceptIsAdmin(true);
 
     cy.login('yoga@studio.com', 'test!1234');
     cy.url().should('include', '/sessions');

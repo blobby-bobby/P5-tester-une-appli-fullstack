@@ -4,24 +4,20 @@ describe('Register spec', () => {
   });
 
   it('should register successfully, with correct credentials', () => {
+    // GIVEN
     cy.intercept('POST', '/api/auth/register', {
       body: {
         id: 1,
-        username: 'userName',
-        firstName: 'firstName',
-        lastName: 'lastName',
+        username: 'JohnnyBravo',
+        firstName: 'Johnny',
+        lastName: 'Bravo',
         admin: true,
       },
     });
 
-    cy.intercept(
-      {
-        method: 'GET',
-        url: '/api/session',
-      },
-      []
-    ).as('session');
+    cy.interceptSessions();
 
+    // WHEN
     cy.get('input[formControlName=firstName]').type('Johnny');
     cy.get('input[formControlName=lastName]').type('Bravo');
     cy.get('input[formControlName=email]').type('johnny@bravo.com');
@@ -29,6 +25,7 @@ describe('Register spec', () => {
       `${'johnny!1234'}{enter}{enter}`
     );
 
+    // THEN
     cy.get('.error').should('not.exist');
     cy.url().should('include', '/login');
   });
