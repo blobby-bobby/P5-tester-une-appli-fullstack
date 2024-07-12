@@ -97,9 +97,6 @@ describe('DetailComponent', () => {
       'button[data-testid="delete-button"]'
     );
 
-    //WHEN
-    fixture.detectChanges();
-
     //THEN
     expect(deleteButton).toBeNull();
   });
