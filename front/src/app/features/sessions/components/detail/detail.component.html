@@ -6,7 +6,7 @@
           <button mat-icon-button (click)="back()">
             <mat-icon>arrow_back</mat-icon>
           </button>
-          <h1>{{ session.name | titlecase }}</h1>
+          <h1 data-testid="session-name">{{ session.name | titlecase }}</h1>
         </div>
         <div>
           <button
@@ -24,6 +24,7 @@
               *ngIf="!isParticipate"
               mat-raised-button
               color="primary"
+              data-testid="participate-button"
               (click)="participate()"
             >
               <mat-icon>person_add</mat-icon>

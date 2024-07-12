@@ -12,6 +12,7 @@ import { Session } from '../../interfaces/session.interface';
 import { Router } from '@angular/router';
 import { routes } from '../../../../app-routing.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { By } from '@angular/platform-browser';
 
 describe('DetailComponent', () => {
   let component: DetailComponent;
@@ -85,6 +86,22 @@ describe('DetailComponent', () => {
 
     //THEN
     expect(sessionApiServiceSpy).toHaveBeenCalledWith('2');
+    expect(component.session).toEqual(mockSession);
+  });
+
+  it('should not have delete button if user is not admin', () => {
+    //GIVEN
+    component.sessionId = '2';
+    mockSessionService.sessionInformation.admin = false;
+    let deleteButton = fixture.debugElement.nativeElement.querySelector(
+      'button[data-testid="delete-button"]'
+    );
+
+    //WHEN
+    fixture.detectChanges();
+
+    //THEN
+    expect(deleteButton).toBeNull();
   });
 
   it('should delete session and redirect to sessions page', () => {
