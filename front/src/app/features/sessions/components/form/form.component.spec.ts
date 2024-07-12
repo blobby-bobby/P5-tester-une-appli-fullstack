@@ -12,14 +12,12 @@ import {
   NoopAnimationsModule,
 } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { expect } from '@jest/globals';
-import { SessionService } from 'src/app/services/session.service';
+import { SessionService } from '../../../../services/session.service';
 import { SessionApiService } from '../../services/session-api.service';
 
 import { FormComponent } from './form.component';
 import { Router } from '@angular/router';
 import { Session } from '../../interfaces/session.interface';
-import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 
 describe('FormComponent', () => {
@@ -72,8 +70,8 @@ describe('FormComponent', () => {
     sessionApiService = TestBed.inject(SessionApiService);
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should initialize component', () => {
+    expect(component).not.toBeNull();
   });
 
   it("should redirect user to '/sessions' if user is not admin", () => {
@@ -100,22 +98,30 @@ describe('FormComponent', () => {
     expect(navigateSpy).not.toHaveBeenCalledWith(['/sessions']);
   });
 
-  it("should redirect user to '/sessions/update/id of the session' if user is admin", () => {
-    // GIVEN
-    // WHEN
-    // THEN
-  });
-
-  it('create should submit form successfully', () => {
-    //Given
+  it('should submit create form successfully', () => {
+    //GIVEN
     let sessionApiServiceSpy = jest
       .spyOn(sessionApiService, 'create')
       .mockReturnValue(of(mockSession));
 
-    //When
+    //WHEN
     component.submit();
 
-    //Then
+    //THEN
+    expect(sessionApiServiceSpy).toHaveBeenCalled();
+  });
+
+  it('should submit update form successfully', () => {
+    //GIVEN
+    let sessionApiServiceSpy = jest
+      .spyOn(sessionApiService, 'update')
+      .mockReturnValue(of(mockSession));
+    component.onUpdate = true;
+
+    //WHEN
+    component.submit();
+
+    //THEN
     expect(sessionApiServiceSpy).toHaveBeenCalled();
   });
 

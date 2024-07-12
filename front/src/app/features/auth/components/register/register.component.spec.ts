@@ -26,7 +26,6 @@ describe('RegisterComponent', () => {
   let routerMock: {
     navigate: jest.Mock;
   };
-  let formBuilder: FormBuilder;
 
   const formValue: RegisterRequest = {
     firstName: 'test',

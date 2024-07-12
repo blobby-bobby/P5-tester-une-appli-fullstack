@@ -6,15 +6,12 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { expect } from '@jest/globals';
 import { SessionService } from '../../../../services/session.service';
 import { DetailComponent } from './detail.component';
-import { MatIconModule } from '@angular/material/icon';
 import { SessionApiService } from '../../services/session-api.service';
 import { of } from 'rxjs';
 import { Session } from '../../interfaces/session.interface';
 import { Router } from '@angular/router';
-import { routes } from 'src/app/app-routing.module';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { routes } from '../../../../app-routing.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { SessionsModule } from '../../sessions.module';
 
 describe('DetailComponent', () => {
   let component: DetailComponent;

@@ -3,14 +3,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { SessionService } from 'src/app/services/session.service';
+import { SessionService } from '../../services/session.service';
 
 import { MeComponent } from './me.component';
-import { expect } from '@jest/globals';
 import { By } from '@angular/platform-browser';
-import { UserService } from 'src/app/services/user.service';
+import { UserService } from '../../services/user.service';
 import { of } from 'rxjs';
-import { User } from 'src/app/interfaces/user.interface';
+import { User } from '../../interfaces/user.interface';
 import { Router } from '@angular/router';
 
 describe('MeComponent', () => {
@@ -89,18 +88,16 @@ describe('MeComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should delete user and redirect to root', () => {
+  it('should delete user', () => {
     // GIVEN
     let userServiceSpy = jest
       .spyOn(userService, 'delete')
       .mockReturnValue(of(void 0));
-    let navigateSpy = jest.spyOn(router, 'navigate');
 
     // WHEN
     component.delete();
 
     // THEN
     expect(userServiceSpy).toHaveBeenCalled();
-    // expect(navigateSpy).toHaveBeenCalledWith(['/']);
   });
 });
