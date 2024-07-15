@@ -37,6 +37,20 @@ describe('Session detail spec', () => {
     cy.get('[data-testid="delete-button"]').should('exist');
   });
 
+  it('should delete session on click on delete button as admin', () => {
+    // GIVEN
+    cy.interceptIsAdmin(true);
+    cy.login('yoga@studio.com', 'test!1234');
+
+    // WHEN
+    cy.get('[data-testid="detail-button"]').first().click();
+    cy.url().should('include', '/sessions/detail/1');
+    cy.get('[data-testid="delete-button"]').click();
+
+    // THEN
+    cy.url().should('include', '/sessions');
+  });
+
   it('should not have delete button on session detail as non admin', () => {
     // GIVEN
     cy.interceptIsAdmin(false);
