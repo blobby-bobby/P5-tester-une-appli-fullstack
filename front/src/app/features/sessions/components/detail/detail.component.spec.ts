@@ -12,7 +12,6 @@ import { Session } from '../../interfaces/session.interface';
 import { Router } from '@angular/router';
 import { routes } from '../../../../app-routing.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { By } from '@angular/platform-browser';
 
 describe('DetailComponent', () => {
   let component: DetailComponent;

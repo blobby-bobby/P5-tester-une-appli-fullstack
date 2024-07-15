@@ -60,7 +60,23 @@ describe('Session detail spec', () => {
     cy.url().should('include', '/sessions/detail/1');
 
     // THEN
-    cy.log('Checking for participate button');
     cy.get('[data-testid="participate-button"]').should('exist');
+  });
+
+  it('should participate on click on participate button', () => {
+    // GIVEN
+    cy.interceptIsAdmin(false);
+    cy.login('yoga@studio.com', 'test!1234');
+    cy.get('[data-testid="detail-button"]').first().click();
+    cy.url().should('include', '/sessions/detail/1');
+
+    // WHEN
+    cy.get('[data-testid="participate-button"]').click();
+
+    // THEN
+    cy.get('[data-testid="participate-button"]').should(
+      'contain',
+      'Do not participate'
+    );
   });
 });

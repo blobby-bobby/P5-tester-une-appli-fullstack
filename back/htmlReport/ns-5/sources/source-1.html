@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > LoginRequest</title>
+  <title>Coverage Report > AuthEntryPointJwt</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">com.openclassrooms.starterjwt.payload.request</a>
+    <a href="../index.html">com.openclassrooms.starterjwt.security.jwt</a>
 </div>
 
-<h1>Coverage Summary for Class: LoginRequest (com.openclassrooms.starterjwt.payload.request)</h1>
+<h1>Coverage Summary for Class: AuthEntryPointJwt (com.openclassrooms.starterjwt.security.jwt)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -41,7 +41,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 </tr>
 <tr>
-  <td class="name">LoginRequest</td>
+  <td class="name">AuthEntryPointJwt</td>
 <td class="coverageStat">
   <span class="percent">
     100%
@@ -52,18 +52,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    50%
+    100%
   </span>
   <span class="absValue">
-    (2/4)
+    (3/3)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    50%
+    100%
   </span>
   <span class="absValue">
-    (2/4)
+    (12/12)
   </span>
 </td>
 </tr>
@@ -75,35 +75,48 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package com.openclassrooms.starterjwt.payload.request;
+<code class="sourceCode" id="sourceCode">&nbsp;package com.openclassrooms.starterjwt.security.jwt;
 &nbsp;
-&nbsp;import lombok.Builder;
+&nbsp;import java.io.IOException;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.Map;
 &nbsp;
-&nbsp;import javax.validation.constraints.NotBlank;
+&nbsp;import javax.servlet.ServletException;
+&nbsp;import javax.servlet.http.HttpServletRequest;
+&nbsp;import javax.servlet.http.HttpServletResponse;
 &nbsp;
-&nbsp;@Builder
-&nbsp;public class LoginRequest {
-&nbsp;	@NotBlank
-&nbsp;  private String email;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.http.MediaType;
+&nbsp;import org.springframework.security.core.AuthenticationException;
+&nbsp;import org.springframework.security.web.AuthenticationEntryPoint;
+&nbsp;import org.springframework.stereotype.Component;
 &nbsp;
-&nbsp;	@NotBlank
-&nbsp;	private String password;
+&nbsp;import com.fasterxml.jackson.databind.ObjectMapper;
 &nbsp;
-&nbsp;	public String getEmail() {
-<b class="fc">&nbsp;		return email;</b>
-&nbsp;	}
+&nbsp;@Component
+<b class="fc">&nbsp;public class AuthEntryPointJwt implements AuthenticationEntryPoint {</b>
 &nbsp;
-&nbsp;	public void setEmail(String email) {
-<b class="nc">&nbsp;		this.email = email;</b>
-&nbsp;	}
+<b class="fc">&nbsp;  private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);</b>
 &nbsp;
-&nbsp;	public String getPassword() {
-<b class="fc">&nbsp;		return password;</b>
-&nbsp;	}
+&nbsp;  @Override
+&nbsp;  public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
+&nbsp;      throws IOException, ServletException {
+<b class="fc">&nbsp;    logger.error(&quot;Unauthorized error: {}&quot;, authException.getMessage());</b>
 &nbsp;
-&nbsp;	public void setPassword(String password) {
-<b class="nc">&nbsp;		this.password = password;</b>
-&nbsp;	}
+<b class="fc">&nbsp;    response.setContentType(MediaType.APPLICATION_JSON_VALUE);</b>
+<b class="fc">&nbsp;    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);</b>
+&nbsp;
+<b class="fc">&nbsp;    final Map&lt;String, Object&gt; body = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;    body.put(&quot;status&quot;, HttpServletResponse.SC_UNAUTHORIZED);</b>
+<b class="fc">&nbsp;    body.put(&quot;error&quot;, &quot;Unauthorized&quot;);</b>
+<b class="fc">&nbsp;    body.put(&quot;message&quot;, authException.getMessage());</b>
+<b class="fc">&nbsp;    body.put(&quot;path&quot;, request.getServletPath());</b>
+&nbsp;
+<b class="fc">&nbsp;    final ObjectMapper mapper = new ObjectMapper();</b>
+<b class="fc">&nbsp;    mapper.writeValue(response.getOutputStream(), body);</b>
+&nbsp;  }
+&nbsp;
 &nbsp;}
 </code>
 </pre>
@@ -128,7 +141,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-07-02 19:20</div>
+    <div style="float:right;">generated on 2024-07-12 14:33</div>
 </div>
 </body>
 </html>

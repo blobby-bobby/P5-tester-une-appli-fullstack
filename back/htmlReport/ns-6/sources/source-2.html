@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > MessageResponse</title>
+  <title>Coverage Report > UserDetailsServiceImpl</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,18 +19,15 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">com.openclassrooms.starterjwt.payload.response</a>
+    <a href="../index.html">com.openclassrooms.starterjwt.security.services</a>
 </div>
 
-<h1>Coverage Summary for Class: MessageResponse (com.openclassrooms.starterjwt.payload.response)</h1>
+<h1>Coverage Summary for Class: UserDetailsServiceImpl (com.openclassrooms.starterjwt.security.services)</h1>
 
 <table class="coverageStats">
+
 <tr>
   <th class="name">Class</th>
-<th class="coverageStat 
-">
-  Class, %
-</th>
 <th class="coverageStat 
 ">
   Method, %
@@ -41,33 +38,52 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 </tr>
 <tr>
-  <td class="name">MessageResponse</td>
+  <td class="name">UserDetailsServiceImpl</td>
 <td class="coverageStat">
   <span class="percent">
     100%
   </span>
   <span class="absValue">
-    (1/1)
+    (2/2)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    66.7%
+    100%
   </span>
   <span class="absValue">
-    (2/3)
-  </span>
-</td>
-<td class="coverageStat">
-  <span class="percent">
-    75%
-  </span>
-  <span class="absValue">
-    (3/4)
+    (11/11)
   </span>
 </td>
 </tr>
-
+  <tr>
+    <td class="name">UserDetailsServiceImpl$$EnhancerBySpringCGLIB$$ce146790</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailsServiceImpl$$EnhancerBySpringCGLIB$$ce146790$$FastClassBySpringCGLIB$$2142d0f7</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailsServiceImpl$$FastClassBySpringCGLIB$$cbbddc3f</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+</tr>
 </table>
 
 <br/>
@@ -75,22 +91,41 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package com.openclassrooms.starterjwt.payload.response;
+<code class="sourceCode" id="sourceCode">&nbsp;package com.openclassrooms.starterjwt.security.services;
 &nbsp;
-&nbsp;public class MessageResponse {
-&nbsp;  private String message;
+&nbsp;import org.springframework.security.core.userdetails.UserDetails;
+&nbsp;import org.springframework.security.core.userdetails.UserDetailsService;
+&nbsp;import org.springframework.security.core.userdetails.UsernameNotFoundException;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
 &nbsp;
-<b class="fc">&nbsp;  public MessageResponse(String message) {</b>
-<b class="fc">&nbsp;    this.message = message;</b>
+&nbsp;import com.openclassrooms.starterjwt.models.User;
+&nbsp;import com.openclassrooms.starterjwt.repository.UserRepository;
+&nbsp;
+&nbsp;@Service
+&nbsp;public class UserDetailsServiceImpl implements UserDetailsService {
+&nbsp;  UserRepository userRepository;
+&nbsp;
+<b class="fc">&nbsp;  UserDetailsServiceImpl(UserRepository userRepository) {</b>
+<b class="fc">&nbsp;    this.userRepository = userRepository;</b>
 &nbsp;  }
 &nbsp;
-&nbsp;  public String getMessage() {
-<b class="fc">&nbsp;    return message;</b>
+&nbsp;  @Override
+&nbsp;  @Transactional
+&nbsp;  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+<b class="fc">&nbsp;    User user = userRepository.findByEmail(username)</b>
+<b class="fc">&nbsp;        .orElseThrow(() -&gt; new UsernameNotFoundException(&quot;User Not Found with email: &quot; + username));</b>
+&nbsp;
+&nbsp;    return UserDetailsImpl
+<b class="fc">&nbsp;            .builder()</b>
+<b class="fc">&nbsp;            .id(user.getId())</b>
+<b class="fc">&nbsp;            .username(user.getEmail())</b>
+<b class="fc">&nbsp;            .lastName(user.getLastName())</b>
+<b class="fc">&nbsp;            .firstName(user.getFirstName())</b>
+<b class="fc">&nbsp;            .password(user.getPassword())</b>
+<b class="fc">&nbsp;            .build();</b>
 &nbsp;  }
 &nbsp;
-&nbsp;  public void setMessage(String message) {
-<b class="nc">&nbsp;    this.message = message;</b>
-&nbsp;  }
 &nbsp;}
 </code>
 </pre>
@@ -115,7 +150,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-07-02 19:20</div>
+    <div style="float:right;">generated on 2024-07-12 14:33</div>
 </div>
 </body>
 </html>
